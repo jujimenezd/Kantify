@@ -1,9 +1,10 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Sparkles, Lightbulb, UserCircle } from "lucide-react"; // Import UserCircle
+import { ArrowRight, Sparkles, Lightbulb, UserCircle } from "lucide-react"; 
 import Image from "next/image";
 import Link from "next/link";
-import KantifyLogo from "@/components/KantifyLogo"; // Import KantifyLogo
+import KantifyLogo from "@/components/KantifyLogo"; 
 
 export default function HomePage() {
   return (
@@ -11,7 +12,7 @@ export default function HomePage() {
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
         <div className="lg:w-1/2">
           <div className="flex items-center gap-2 text-primary mb-4">
-            <KantifyLogo className="h-8 w-8 sm:h-10 sm:w-10 text-primary" /> {/* Use KantifyLogo */}
+            <KantifyLogo className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
               Kantify
             </h1>
@@ -28,12 +29,12 @@ export default function HomePage() {
         </div>
         <div className="lg:w-1/2 flex justify-center">
           <Image
-            src="/ethical-reflection-hero.jpg" // Updated image path
+            src="/gemini.jpg" // Cambiado para apuntar a gemini.jpg en la carpeta public
             alt="Representación abstracta de elecciones éticas y huellas digitales de identidad"
-            width={500} // Adjusted width
-            height={500} // Adjusted height
+            width={500} 
+            height={500} 
             className="rounded-xl shadow-2xl object-cover"
-            priority // Add priority for LCP image
+            priority 
           />
         </div>
       </div>
@@ -72,7 +73,7 @@ export default function HomePage() {
           <Card className="shadow-md hover:shadow-lg transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <UserCircle className="text-accent" /> {/* Use UserCircle icon */}
+                <UserCircle className="text-accent" /> 
                 Perfil Personalizado
               </CardTitle>
             </CardHeader>
