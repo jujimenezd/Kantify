@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Compass, Sparkles, Lightbulb } from "lucide-react";
+import { ArrowRight, Sparkles, Lightbulb, UserCircle } from "lucide-react"; // Import UserCircle
 import Image from "next/image";
 import Link from "next/link";
+import KantifyLogo from "@/components/KantifyLogo"; // Import KantifyLogo
 
 export default function HomePage() {
   return (
@@ -10,8 +11,7 @@ export default function HomePage() {
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
         <div className="lg:w-1/2">
           <div className="flex items-center gap-2 text-primary mb-4">
-            {/* Consider using KantifyLogo if it's different from Compass, or adjust */}
-            <Compass size={32} /> 
+            <KantifyLogo className="h-8 w-8 sm:h-10 sm:w-10 text-primary" /> {/* Use KantifyLogo */}
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
               Kantify
             </h1>
@@ -28,12 +28,12 @@ export default function HomePage() {
         </div>
         <div className="lg:w-1/2 flex justify-center">
           <Image
-            src="https://placehold.co/600x400.png"
-            alt="Representación abstracta de elecciones éticas"
-            data-ai-hint="moral dilemma reflection"
-            width={600}
-            height={400}
+            src="/ethical-reflection-hero.jpg" // Updated image path
+            alt="Representación abstracta de elecciones éticas y huellas digitales de identidad"
+            width={500} // Adjusted width
+            height={500} // Adjusted height
             className="rounded-xl shadow-2xl object-cover"
+            priority // Add priority for LCP image
           />
         </div>
       </div>
@@ -72,7 +72,7 @@ export default function HomePage() {
           <Card className="shadow-md hover:shadow-lg transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Compass className="text-accent" /> {/* Or a profile icon */}
+                <UserCircle className="text-accent" /> {/* Use UserCircle icon */}
                 Perfil Personalizado
               </CardTitle>
             </CardHeader>

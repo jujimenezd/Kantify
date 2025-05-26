@@ -60,9 +60,13 @@ Genera UN NUEVO Y ORIGINAL dilema ético que:
 3. Explore una faceta de la variable oculta asociada a este tópico.
 4. Sea conciso, claro y provoque reflexión, al estilo de los ejemplos.
 5. NO repita los ejemplos proporcionados.
-6. Devuelve SOLO el texto del nuevo dilema.
 
-Nuevo Dilema:`,
+Devuelve tu respuesta como un objeto JSON con la siguiente estructura:
+{
+  "dilemmaText": "El texto del nuevo dilema aquí..."
+}
+
+JSON Output:`,
 });
 
 const generatePersonalizedDilemmaFlow = ai.defineFlow(
@@ -73,6 +77,9 @@ const generatePersonalizedDilemmaFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await generateDilemmaPrompt(input);
-    return {dilemmaText: output!.dilemmaText};
+    if (!output || !output.dilemmaText) {
+      throw new Error('La IA no pudo generar el texto del dilema en el formato esperado.');
+    }
+    return {dilemmaText: output.dilemmaText};
   }
 );

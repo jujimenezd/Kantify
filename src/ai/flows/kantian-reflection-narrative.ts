@@ -38,7 +38,7 @@ const kantianNarrativePrompt = ai.definePrompt({
 
 You will receive the text of an ethical dilemma, the user's response (a number between 0 and 1), and the ethical topic of the dilemma.
 
-Your task is to generate a short narrative (around 100-150 words) that explains the potential consequences of universalizing the user's response, using a \"What if everyone...\" format.
+Your task is to generate a short narrative (around 100-150 words) that explains the potential consequences of universalizing the user's response, using a "What if everyone..." format.
 
 The narrative should:
 
@@ -46,7 +46,7 @@ The narrative should:
 *   Explain what would happen if everyone acted according to that maxim.
 *   Highlight any contradictions, harms, or undesirable consequences that would arise from the universalization of the maxim.
 *   Offer a concise reflection on the ethical implications of the user's choice from a Kantian perspective, focusing on the importance of acting according to principles that could be universal laws.
-*   Be written in a clear, accessible, and engaging style.
+*   Be written in a clear, accessible, and engaging style, in Spanish.
 
 Here's the information:
 
@@ -54,7 +54,12 @@ Dilemma: {{{dilemmaText}}}
 User Response (0-1): {{{userResponse}}}
 Topic: {{{topic}}}
 
-Narrative:`,
+Devuelve tu respuesta como un objeto JSON con la siguiente estructura:
+{
+  "narrative": "La narrativa kantiana aquí..."
+}
+
+JSON Output:`,
 });
 
 const kantianReflectionNarrativeFlow = ai.defineFlow(
@@ -65,6 +70,9 @@ const kantianReflectionNarrativeFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await kantianNarrativePrompt(input);
-    return output!;
+    if (!output || !output.narrative) {
+      throw new Error('La IA no pudo generar la narrativa en el formato esperado.');
+    }
+    return output;
   }
 );
