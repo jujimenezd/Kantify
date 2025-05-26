@@ -6,6 +6,7 @@ import type { Dilemma, AnsweredDilemma, EthicalProfile, AnyDilemma, GeneratedDil
 import AllDilemmasSeed from '@/data/corpus_dilemas.json'; 
 import { generatePersonalizedDilemma } from '@/ai/flows/generate-dilemma';
 import { generateKantianNarrative } from '@/ai/flows/kantian-reflection-narrative';
+import { useToast } from '@/hooks/use-toast';
 
 interface AppState {
   sessionUUID: string | null;
@@ -37,17 +38,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentCorpusIndex, setCurrentCorpusIndex] = useState<number>(0);
   const [isLoadingAi, setIsLoadingAi] = useState<boolean>(false);
   const [ethicalProfile, setEthicalProfile] = useState<EthicalProfile | null>(null);
+  const { toast } = useToast();
 
 
   const initializeSession = useCallback(() => {
-    let storedUUID = localStorage.getItem('kantifySessionUUID'); // Updated key
+    let storedUUID = localStorage.getItem('kantifySessionUUID');
     if (!storedUUID) {
       storedUUID = crypto.randomUUID();
-      localStorage.setItem('kantifySessionUUID', storedUUID); // Updated key
+      localStorage.setItem('kantifySessionUUID', storedUUID);
     }
     setSessionUUID(storedUUID);
     
-    const storedAnswers = localStorage.getItem(`kantifyAnswers-${storedUUID}`); // Updated key
+    const storedAnswers = localStorage.getItem(`kantifyAnswers-${storedUUID}`);
     if (storedAnswers) {
         const parsedAnswers = JSON.parse(storedAnswers) as AnsweredDilemma[];
         parsedAnswers.forEach(ans => ans.timestamp = new Date(ans.timestamp));
@@ -57,10 +59,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
     
     setEthicalProfile(null);
-    setCurrentCorpusIndex(0);
+    // Si hay respuestas guardadas, el índice del corpus podría necesitar ajustarse
+    // o podríamos cargar el último dilema visto si esa lógica se implementara.
+    // Por ahora, siempre empezamos con el primer dilema del corpus o el siguiente no respondido.
+    setCurrentCorpusIndex(0); 
 
     if (corpusDilemmas.length > 0) {
       const firstDilemma = corpusDilemmas[0];
+      // Chequear si este dilema ya fue respondido para mostrar su narrativa si existe
       const alreadyAnswered = answeredDilemmas.find(ad => ad.dilemma.id_dilema === firstDilemma.id_dilema);
       if (alreadyAnswered) {
          setCurrentDilemma({ ...firstDilemma, kantianNarrative: alreadyAnswered.kantianNarrative || null });
@@ -69,8 +75,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     } else {
         setCurrentDilemma(null);
+        toast({
+          title: "Sin dilemas",
+          description: "No se pudo cargar el corpus inicial de dilemas.",
+          variant: "destructive",
+        });
     }
-  }, [corpusDilemmas]); // Removed answeredDilemmas from deps to avoid potential loops on init
+  }, [corpusDilemmas, toast]); // Removido answeredDilemmas para evitar re-inicializaciones no deseadas
 
   useEffect(() => {
     initializeSession();
@@ -78,9 +89,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
   useEffect(() => {
     if (sessionUUID && answeredDilemmas.length > 0) {
-      localStorage.setItem(`kantifyAnswers-${sessionUUID}`, JSON.stringify(answeredDilemmas)); // Updated key
+      localStorage.setItem(`kantifyAnswers-${sessionUUID}`, JSON.stringify(answeredDilemmas));
     } else if (sessionUUID && answeredDilemmas.length === 0) {
-        localStorage.removeItem(`kantifyAnswers-${sessionUUID}`); // Updated key
+        localStorage.removeItem(`kantifyAnswers-${sessionUUID}`);
     }
   }, [sessionUUID, answeredDilemmas]);
 
@@ -95,24 +106,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         topic: currentDilemma.topico_principal,
       });
       
-      // Use the currentDilemma without its old narrative for the AnsweredDilemma record
       const { kantianNarrative, ...originalDilemmaForRecord } = currentDilemma;
 
       const newAnsweredDilemma: AnsweredDilemma = {
-        dilemma: originalDilemmaForRecord as AnyDilemma, // Ensure it's the base dilemma type
+        dilemma: originalDilemmaForRecord as AnyDilemma,
         userResponse: responseValue,
         kantianNarrative: narrativeResult.narrative,
         timestamp: new Date(),
       };
       setAnsweredDilemmas(prev => [...prev, newAnsweredDilemma]);
       setCurrentDilemma(prev => prev ? {...prev, kantianNarrative: narrativeResult.narrative } : null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generando la narrativa Kantiana:", error);
+      toast({
+        title: "Error de IA",
+        description: `No se pudo generar la reflexión kantiana: ${error.message || 'Error desconocido'}`,
+        variant: "destructive",
+      });
       const { kantianNarrative, ...originalDilemmaForRecord } = currentDilemma;
       const newAnsweredDilemma: AnsweredDilemma = {
         dilemma: originalDilemmaForRecord as AnyDilemma,
         userResponse: responseValue,
-        kantianNarrative: "Error al generar la reflexión. Por favor, inténtalo más tarde.",
+        kantianNarrative: "Error al generar la reflexión. Por favor, inténtalo más tarde o revisa la consola para más detalles.",
         timestamp: new Date(),
       };
       setAnsweredDilemmas(prev => [...prev, newAnsweredDilemma]);
@@ -123,7 +138,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const getNextDilemmaFromCorpus = () => {
-    setIsLoadingAi(true); // Show loading while switching
+    if (corpusDilemmas.length === 0) {
+      toast({ title: "Sin dilemas", description: "No hay más dilemas en el corpus.", variant: "default"});
+      return;
+    }
+    setIsLoadingAi(true); 
     const nextIndex = (currentCorpusIndex + 1) % corpusDilemmas.length;
     setCurrentCorpusIndex(nextIndex);
     const nextDilemma = corpusDilemmas[nextIndex];
@@ -144,7 +163,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         .slice(0, 3); 
 
       if (seedExamples.length === 0) {
-        // Fallback if no specific seeds found, pick any 3 from the same topic if possible, or just any 3.
         seedExamples = corpusDilemmas.filter(d => d.topico_principal === topic).slice(0,3);
         if (seedExamples.length === 0) {
             seedExamples = corpusDilemmas.slice(0,3);
@@ -169,13 +187,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         intensidad: intensity,
       };
       setCurrentDilemma({...newGeneratedDilemma, kantianNarrative: null});
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generando dilema personalizado:", error);
-      setCurrentDilemma(prev => prev ? {...prev, kantianNarrative: "Error al generar nuevo dilema."} : 
-        (corpusDilemmas.length > 0 ? {...corpusDilemmas[0], kantianNarrative: "Error al generar nuevo dilema."} : null)
-      );
-      // Fallback to a corpus dilemma might be better here if generation fails often
-      // getNextDilemmaFromCorpus(); 
+      toast({
+        title: "Error de IA",
+        description: `No se pudo generar un nuevo dilema: ${error.message || 'Error desconocido'}. Se mostrará uno del corpus.`,
+        variant: "destructive",
+      });
+      // Fallback a un dilema del corpus si la generación falla
+      getNextDilemmaFromCorpus();
     } finally {
       setIsLoadingAi(false);
     }
@@ -196,7 +216,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const topicsCovered = new Set(answeredDilemmas.map(ad => ad.dilemma.topico_principal));
     const summary = `Has reflexionado sobre ${answeredDilemmas.length} dilema(s) cubriendo ${topicsCovered.size} tópico(s) ético(s) único(s).`;
     
-    // Simple aggregation for visual_data example
     const responsesPerTopic: Record<string, number[]> = {};
     answeredDilemmas.forEach(ad => {
       if (!responsesPerTopic[ad.dilemma.topico_principal]) {
@@ -218,22 +237,38 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         topicsList: Array.from(topicsCovered),
         averageResponsePerTopic,
        },
-      answeredDilemmas: [...answeredDilemmas].sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime()) // Show newest first
+      answeredDilemmas: [...answeredDilemmas].sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime())
     });
     setIsLoadingAi(false);
   };
 
   const clearSession = () => {
     if (sessionUUID) {
-        localStorage.removeItem(`kantifyAnswers-${sessionUUID}`); // Updated key
-        localStorage.removeItem('kantifySessionUUID'); // Updated key
+        localStorage.removeItem(`kantifyAnswers-${sessionUUID}`);
+        localStorage.removeItem('kantifySessionUUID');
     }
     setSessionUUID(null);
     setAnsweredDilemmas([]);
     setCurrentDilemma(null);
     setEthicalProfile(null);
     setCurrentCorpusIndex(0);
-    initializeSession(); // Re-initialize to get a new UUID
+    // No llames a initializeSession() aquí directamente para evitar bucles,
+    // el useEffect [initializeSession] se encargará si es necesario un nuevo UUID.
+    // Forzamos una recarga para asegurar un estado limpio si es necesario.
+    // window.location.reload(); // O una forma más suave de re-inicializar el estado
+    // Mejor, simplemente permitir que el useEffect de initializeSession haga su trabajo
+    // al detectar que sessionUUID es null.
+    // Para forzar la creación de un nuevo UUID, primero establecemos sessionUUID a null
+    // y luego llamamos a initializeSession en el siguiente ciclo de renderizado.
+    // Esto es manejado por el useEffect que depende de initializeSession.
+    // Si queremos un nuevo UUID *inmediatamente*:
+    const newUUID = crypto.randomUUID();
+    localStorage.setItem('kantifySessionUUID', newUUID);
+    setSessionUUID(newUUID);
+    // Y luego dejar que initializeSession se ejecute con este nuevo UUID.
+    // El initializeSession ya se llama en un useEffect, asi que esto deberia ser suficiente.
+    // O simplemente llamar initializeSession después de limpiar.
+    initializeSession(); 
   };
 
 

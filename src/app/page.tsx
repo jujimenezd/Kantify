@@ -29,7 +29,7 @@ export default function HomePage() {
         </div>
         <div className="lg:w-1/2 flex justify-center">
           <Image
-            src="/gemini.jpg" // Cambiado para apuntar a gemini.jpg en la carpeta public
+            src="/gemini.jpg" // Asegúrate que gemini.jpg esté en la carpeta /public
             alt="Representación abstracta de elecciones éticas y huellas digitales de identidad"
             width={500} 
             height={500} 
