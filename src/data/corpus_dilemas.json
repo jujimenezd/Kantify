@@ -1,0 +1,87 @@
+
+[
+  {
+    "id_dilema": "TM_S_01",
+    "texto_dilema": "Si una acción mía hoy (ej: usar excesivo plástico de un solo uso) tiene un impacto negativo menor pero acumulativo que solo será claramente visible en 50 años, ¿me siento realmente responsable por ello?",
+    "topico_principal": "Temporalidad Moral",
+    "intensidad": "Suave",
+    "variable_oculta_primaria": "Grado de asunción de consecuencias diacrónicas de los actos (en escala menor, impacto diferido)."
+  },
+  {
+    "id_dilema": "TM_S_02",
+    "texto_dilema": "Al tomar decisiones sobre mi carrera o estudios, ¿considero seriamente cómo mis habilidades podrían contribuir a resolver problemas que se prevén para las próximas décadas, aunque no me beneficien directamente ahora?",
+    "topico_principal": "Temporalidad Moral",
+    "intensidad": "Suave",
+    "variable_oculta_primaria": "Grado de asunción de consecuencias diacrónicas de los actos (aplicado a planificación personal con visión de futuro social)."
+  },
+  {
+    "id_dilema": "TM_M_01",
+    "texto_dilema": "Si supiera que mi estilo de vida actual contribuye significativamente a problemas ambientales que harán la vida muy difícil para la generación de mis nietos, ¿estaría dispuesto/a a realizar cambios drásticos y permanentes en mis hábitos (ej: dejar de volar, reducir drásticamente el consumo de carne), aunque esto limite mi disfrute y comodidad presentes?",
+    "topico_principal": "Temporalidad Moral",
+    "intensidad": "Medio",
+    "variable_oculta_primaria": "Grado de asunción de consecuencias diacrónicas de los actos (sacrificio personal considerable por bienestar de generaciones futuras directas)."
+  },
+  {
+    "id_dilema": "TM_E_01",
+    "texto_dilema": "Si tuvieras el poder de tomar una decisión que aseguraría un futuro próspero y sostenible para la humanidad dentro de 500 años, pero requiriera el sacrificio inmediato y consentido de una pequeña comunidad inocente actual (digamos, 1000 personas), ¿lo harías? (Inspirado en dilemas de \"el fin justifica los medios\" con un fuerte componente temporal).",
+    "topico_principal": "Temporalidad Moral",
+    "intensidad": "Extremo",
+    "variable_oculta_primaria": "Grado de asunción de consecuencias diacrónicas de los actos (hasta qué punto el futuro lejano justifica costos humanos presentes inmensos)."
+  },
+  {
+    "id_dilema": "AR_S_01",
+    "texto_dilema": "Cuando veo noticias sobre personas sufriendo en un país lejano y culturalmente muy diferente al mío, ¿siento un impulso genuino de ayudar (ej: donando a una ONG que trabaje allí) similar al que sentiría si fueran personas de mi propia comunidad?",
+    "topico_principal": "Alteridad Radical",
+    "intensidad": "Suave",
+    "variable_oculta_primaria": "Radio de reconocimiento ético más allá de categorías identitarias (empatía y responsabilidad hacia el \"Otro\" distante)."
+  },
+  {
+    "id_dilema": "AR_S_02",
+    "texto_dilema": "Si un nuevo compañero de trabajo o estudio tiene costumbres o creencias que me resultan extrañas o incluso incómodas, ¿me esfuerzo activamente por comprender su perspectiva y tratarlo con el mismo respeto y apertura que a alguien con quien comparto más afinidades?",
+    "topico_principal": "Alteridad Radical",
+    "intensidad": "Suave",
+    "variable_oculta_primaria": "Radio de reconocimiento ético más allá de categorías identitarias (apertura al \"Otro\" cercano pero diferente)."
+  },
+  {
+    "id_dilema": "AR_M_01",
+    "texto_dilema": "Si tuviera la oportunidad de acoger temporalmente en mi casa a una familia de refugiados que huye de la guerra, lo cual implicaría compartir mis recursos, espacio y privacidad durante varios meses, ¿lo consideraría seriamente a pesar de las incomodidades y posibles desafíos?",
+    "topico_principal": "Alteridad Radical",
+    "intensidad": "Medio",
+    "variable_oculta_primaria": "Radio de reconocimiento ético más allá de categorías identitarias (disposición a un sacrificio personal significativo por el \"Otro\" necesitado)."
+  },
+  {
+    "id_dilema": "AR_E_01",
+    "texto_dilema": "Si pudieras salvar la vida de cien personas inocentes en un país lejano sacrificando la vida de una persona inocente de tu propia familia (que no sea tú mismo/a y sin su consentimiento), ¿lo harías?",
+    "topico_principal": "Alteridad Radical",
+    "intensidad": "Extremo",
+    "variable_oculta_primaria": "Radio de reconocimiento ético más allá de categorías identitarias (utilitarismo extremo vs. lealtades primarias, instrumentalización del \"Otro\" cercano)."
+  },
+  {
+    "id_dilema": "IU_S_01",
+    "texto_dilema": "Si llego tarde a una reunión importante y la única forma de no parecer irresponsable es inventar una pequeña excusa (ej: \"había mucho tráfico\", cuando en realidad me quedé dormido), ¿lo haría, pensando que es una mentira piadosa sin mayores consecuencias?",
+    "topico_principal": "Imperativo de Universalización",
+    "intensidad": "Suave",
+    "variable_oculta_primaria": "Coherencia lógica entre máximas personales y leyes universales (aplicado a pequeñas \"mentiras sociales\" y su universalización)."
+  },
+  {
+    "id_dilema": "IU_S_02",
+    "texto_dilema": "En un examen o tarea, si tengo la oportunidad de copiar una respuesta pequeña de un compañero sin que nadie se dé cuenta, asegurándome una mejor nota, ¿consideraría hacerlo si siento que estoy bajo mucha presión o que el sistema de evaluación es injusto?",
+    "topico_principal": "Imperativo de Universalización",
+    "intensidad": "Suave",
+    "variable_oculta_primaria": "Coherencia lógica entre máximas personales y leyes universales (universalización de la trampa menor en contextos evaluativos)."
+  },
+  {
+    "id_dilema": "IU_M_01",
+    "texto_dilema": "(Revisitando el clásico) \"¿Mentirías a un amigo cercano sobre un asunto grave (ej: una infidelidad de su pareja que tú conoces) para evitarle un sufrimiento inmediato, aunque sepas que si todas las amistades actuaran así la confianza fundamental en las relaciones se erosionaría?\"",
+    "topico_principal": "Imperativo de Universalización",
+    "intensidad": "Medio",
+    "variable_oculta_primaria": "Coherencia lógica entre máximas personales y leyes universales (conflicto entre lealtad/protección particular y el principio de veracidad universalizable)."
+  },
+  {
+    "id_dilema": "IU_E_01",
+    "texto_dilema": "Si tuvieras una enfermedad contagiosa y mortal para la cual no existe cura, y el aislamiento total es la única forma de evitar una pandemia global, pero este aislamiento te condena a una muerte solitaria y terrible, ¿respetarías la cuarentena estrictamente, o intentarías buscar alguna forma de compañía o consuelo aunque pusieras en riesgo a toda la humanidad? (La máxima \"priorizar mi bienestar emocional terminal sobre la seguridad de todos\").",
+    "topico_principal": "Imperativo de Universalización",
+    "intensidad": "Extremo",
+    "variable_oculta_primaria": "Coherencia lógica entre máximas personales y leyes universales (autoconservación y necesidad afectiva extrema vs. responsabilidad universal absoluta)."
+  }
+]
