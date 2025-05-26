@@ -3,7 +3,7 @@
 import type React from 'react';
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { Dilemma, AnsweredDilemma, EthicalProfile, AnyDilemma, GeneratedDilemma } from '@/lib/types';
-import AllDilemmasSeed from '@/data/corpus_dilemas.json'; // Seed dilemmas
+import AllDilemmasSeed from '@/data/corpus_dilemas.json'; 
 import { generatePersonalizedDilemma } from '@/ai/flows/generate-dilemma';
 import { generateKantianNarrative } from '@/ai/flows/kantian-reflection-narrative';
 
@@ -11,7 +11,7 @@ interface AppState {
   sessionUUID: string | null;
   corpusDilemmas: Dilemma[];
   answeredDilemmas: AnsweredDilemma[];
-  currentDilemma: AnyDilemma | null;
+  currentDilemma: (AnyDilemma & { kantianNarrative?: string | null }) | null;
   isLoadingAi: boolean;
   ethicalProfile: EthicalProfile | null;
 }
@@ -33,46 +33,54 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [sessionUUID, setSessionUUID] = useState<string | null>(null);
   const [corpusDilemmas] = useState<Dilemma[]>(initialCorpusDilemmas);
   const [answeredDilemmas, setAnsweredDilemmas] = useState<AnsweredDilemma[]>([]);
-  const [currentDilemma, setCurrentDilemma] = useState<AnyDilemma | null>(null);
+  const [currentDilemma, setCurrentDilemma] = useState<(AnyDilemma & { kantianNarrative?: string | null }) | null>(null);
   const [currentCorpusIndex, setCurrentCorpusIndex] = useState<number>(0);
   const [isLoadingAi, setIsLoadingAi] = useState<boolean>(false);
   const [ethicalProfile, setEthicalProfile] = useState<EthicalProfile | null>(null);
 
 
   const initializeSession = useCallback(() => {
-    let storedUUID = localStorage.getItem('ethicalCompassSessionUUID');
+    let storedUUID = localStorage.getItem('kantifySessionUUID'); // Updated key
     if (!storedUUID) {
       storedUUID = crypto.randomUUID();
-      localStorage.setItem('ethicalCompassSessionUUID', storedUUID);
+      localStorage.setItem('kantifySessionUUID', storedUUID); // Updated key
     }
     setSessionUUID(storedUUID);
-    // Load answered dilemmas from local storage if they exist for this session
-    const storedAnswers = localStorage.getItem(`ethicalCompassAnswers-${storedUUID}`);
+    
+    const storedAnswers = localStorage.getItem(`kantifyAnswers-${storedUUID}`); // Updated key
     if (storedAnswers) {
         const parsedAnswers = JSON.parse(storedAnswers) as AnsweredDilemma[];
-        // Dates are stored as strings, convert them back
         parsedAnswers.forEach(ans => ans.timestamp = new Date(ans.timestamp));
         setAnsweredDilemmas(parsedAnswers);
     } else {
         setAnsweredDilemmas([]);
     }
+    
     setEthicalProfile(null);
     setCurrentCorpusIndex(0);
+
     if (corpusDilemmas.length > 0) {
-      setCurrentDilemma(corpusDilemmas[0]);
+      const firstDilemma = corpusDilemmas[0];
+      const alreadyAnswered = answeredDilemmas.find(ad => ad.dilemma.id_dilema === firstDilemma.id_dilema);
+      if (alreadyAnswered) {
+         setCurrentDilemma({ ...firstDilemma, kantianNarrative: alreadyAnswered.kantianNarrative || null });
+      } else {
+         setCurrentDilemma({ ...firstDilemma, kantianNarrative: null });
+      }
+    } else {
+        setCurrentDilemma(null);
     }
-  }, [corpusDilemmas]);
+  }, [corpusDilemmas]); // Removed answeredDilemmas from deps to avoid potential loops on init
 
   useEffect(() => {
     initializeSession();
   }, [initializeSession]);
   
-  // Save answers to local storage whenever they change
   useEffect(() => {
     if (sessionUUID && answeredDilemmas.length > 0) {
-      localStorage.setItem(`ethicalCompassAnswers-${sessionUUID}`, JSON.stringify(answeredDilemmas));
+      localStorage.setItem(`kantifyAnswers-${sessionUUID}`, JSON.stringify(answeredDilemmas)); // Updated key
     } else if (sessionUUID && answeredDilemmas.length === 0) {
-        localStorage.removeItem(`ethicalCompassAnswers-${sessionUUID}`);
+        localStorage.removeItem(`kantifyAnswers-${sessionUUID}`); // Updated key
     }
   }, [sessionUUID, answeredDilemmas]);
 
@@ -87,53 +95,65 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         topic: currentDilemma.topico_principal,
       });
       
+      // Use the currentDilemma without its old narrative for the AnsweredDilemma record
+      const { kantianNarrative, ...originalDilemmaForRecord } = currentDilemma;
+
       const newAnsweredDilemma: AnsweredDilemma = {
-        dilemma: currentDilemma,
+        dilemma: originalDilemmaForRecord as AnyDilemma, // Ensure it's the base dilemma type
         userResponse: responseValue,
         kantianNarrative: narrativeResult.narrative,
         timestamp: new Date(),
       };
       setAnsweredDilemmas(prev => [...prev, newAnsweredDilemma]);
-      setCurrentDilemma(prev => prev ? {...prev, kantianNarrative: narrativeResult.narrative } as AnyDilemma & { kantianNarrative?: string} : null); // Update current dilemma to show narrative
+      setCurrentDilemma(prev => prev ? {...prev, kantianNarrative: narrativeResult.narrative } : null);
     } catch (error) {
-      console.error("Error generating Kantian narrative:", error);
-      // Store answer even if narrative fails
+      console.error("Error generando la narrativa Kantiana:", error);
+      const { kantianNarrative, ...originalDilemmaForRecord } = currentDilemma;
       const newAnsweredDilemma: AnsweredDilemma = {
-        dilemma: currentDilemma,
+        dilemma: originalDilemmaForRecord as AnyDilemma,
         userResponse: responseValue,
-        kantianNarrative: "Error generating reflection. Please try again later.",
+        kantianNarrative: "Error al generar la reflexión. Por favor, inténtalo más tarde.",
         timestamp: new Date(),
       };
       setAnsweredDilemmas(prev => [...prev, newAnsweredDilemma]);
-      setCurrentDilemma(prev => prev ? {...prev, kantianNarrative: "Error generating reflection."} as AnyDilemma & { kantianNarrative?: string } : null);
+      setCurrentDilemma(prev => prev ? {...prev, kantianNarrative: "Error al generar la reflexión."} : null);
     } finally {
       setIsLoadingAi(false);
     }
   };
 
   const getNextDilemmaFromCorpus = () => {
+    setIsLoadingAi(true); // Show loading while switching
     const nextIndex = (currentCorpusIndex + 1) % corpusDilemmas.length;
     setCurrentCorpusIndex(nextIndex);
-    setCurrentDilemma(corpusDilemmas[nextIndex]);
+    const nextDilemma = corpusDilemmas[nextIndex];
+    const alreadyAnswered = answeredDilemmas.find(ad => ad.dilemma.id_dilema === nextDilemma.id_dilema);
+     if (alreadyAnswered) {
+         setCurrentDilemma({ ...nextDilemma, kantianNarrative: alreadyAnswered.kantianNarrative || null });
+      } else {
+         setCurrentDilemma({ ...nextDilemma, kantianNarrative: null });
+      }
+    setIsLoadingAi(false);
   };
 
   const generateAndSetNewDilemma = async (topic: string, intensity: "Suave" | "Medio" | "Extremo") => {
     setIsLoadingAi(true);
     try {
-      const seedExamples = corpusDilemmas
+      let seedExamples = corpusDilemmas
         .filter(d => d.topico_principal === topic && d.intensidad === intensity)
-        .slice(0, 3); // Take up to 3 seed examples
+        .slice(0, 3); 
 
       if (seedExamples.length === 0) {
-        // Fallback if no specific seeds found, pick any 3
-        seedExamples.push(...corpusDilemmas.slice(0,3));
+        // Fallback if no specific seeds found, pick any 3 from the same topic if possible, or just any 3.
+        seedExamples = corpusDilemmas.filter(d => d.topico_principal === topic).slice(0,3);
+        if (seedExamples.length === 0) {
+            seedExamples = corpusDilemmas.slice(0,3);
+        }
       }
       
-      // For userContext, we could summarize previous answers if needed.
-      // For now, passing a generic or empty context.
       const userContext = answeredDilemmas.length > 0 
-        ? `User has answered ${answeredDilemmas.length} dilemmas. Last answer on topic '${answeredDilemmas[answeredDilemmas.length-1].dilemma.topico_principal}' was ${answeredDilemmas[answeredDilemmas.length-1].userResponse}.`
-        : "This is the user's first generated dilemma.";
+        ? `El usuario ha respondido a ${answeredDilemmas.length} dilemas. La última respuesta sobre el tópico '${answeredDilemmas[answeredDilemmas.length-1].dilemma.topico_principal}' fue ${answeredDilemmas[answeredDilemmas.length-1].userResponse}.`
+        : "Este es el primer dilema generado para el usuario.";
 
       const result = await generatePersonalizedDilemma({
         topic,
@@ -148,51 +168,72 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         topico_principal: topic,
         intensidad: intensity,
       };
-      setCurrentDilemma(newGeneratedDilemma);
+      setCurrentDilemma({...newGeneratedDilemma, kantianNarrative: null});
     } catch (error) {
-      console.error("Error generating personalized dilemma:", error);
-      // Fallback to a corpus dilemma or show error
-      getNextDilemmaFromCorpus(); 
+      console.error("Error generando dilema personalizado:", error);
+      setCurrentDilemma(prev => prev ? {...prev, kantianNarrative: "Error al generar nuevo dilema."} : 
+        (corpusDilemmas.length > 0 ? {...corpusDilemmas[0], kantianNarrative: "Error al generar nuevo dilema."} : null)
+      );
+      // Fallback to a corpus dilemma might be better here if generation fails often
+      // getNextDilemmaFromCorpus(); 
     } finally {
       setIsLoadingAi(false);
     }
   };
   
   const generateProfile = () => {
+    setIsLoadingAi(true);
     if (answeredDilemmas.length === 0) {
       setEthicalProfile({
-        summary: "No dilemmas answered yet. Explore some dilemmas to generate your ethical profile.",
+        summary: "Aún no has respondido a ningún dilema. Explora algunos dilemas para generar tu perfil ético.",
         visual_data: {},
         answeredDilemmas: []
       });
+       setIsLoadingAi(false);
       return;
     }
 
-    // Example summary - can be more sophisticated
     const topicsCovered = new Set(answeredDilemmas.map(ad => ad.dilemma.topico_principal));
-    const summary = `You have reflected on ${answeredDilemmas.length} dilemma(s) covering ${topicsCovered.size} unique ethical topic(s).`;
+    const summary = `Has reflexionado sobre ${answeredDilemmas.length} dilema(s) cubriendo ${topicsCovered.size} tópico(s) ético(s) único(s).`;
     
-    // visual_data could be responses per topic, average response, etc.
-    // For simplicity, just pass all answered dilemmas for now.
+    // Simple aggregation for visual_data example
+    const responsesPerTopic: Record<string, number[]> = {};
+    answeredDilemmas.forEach(ad => {
+      if (!responsesPerTopic[ad.dilemma.topico_principal]) {
+        responsesPerTopic[ad.dilemma.topico_principal] = [];
+      }
+      responsesPerTopic[ad.dilemma.topico_principal].push(ad.userResponse);
+    });
+    
+    const averageResponsePerTopic: Record<string, number> = {};
+    for (const topic in responsesPerTopic) {
+      const responses = responsesPerTopic[topic];
+      averageResponsePerTopic[topic] = responses.reduce((a, b) => a + b, 0) / responses.length;
+    }
+
     setEthicalProfile({
       summary,
-      visual_data: { /* Can be expanded */ },
-      answeredDilemmas: [...answeredDilemmas] 
+      visual_data: { 
+        totalAnswered: answeredDilemmas.length,
+        topicsList: Array.from(topicsCovered),
+        averageResponsePerTopic,
+       },
+      answeredDilemmas: [...answeredDilemmas].sort((a,b) => b.timestamp.getTime() - a.timestamp.getTime()) // Show newest first
     });
+    setIsLoadingAi(false);
   };
 
   const clearSession = () => {
     if (sessionUUID) {
-        localStorage.removeItem(`ethicalCompassAnswers-${sessionUUID}`);
-        localStorage.removeItem('ethicalCompassSessionUUID');
+        localStorage.removeItem(`kantifyAnswers-${sessionUUID}`); // Updated key
+        localStorage.removeItem('kantifySessionUUID'); // Updated key
     }
     setSessionUUID(null);
     setAnsweredDilemmas([]);
     setCurrentDilemma(null);
     setEthicalProfile(null);
     setCurrentCorpusIndex(0);
-    // Re-initialize to get a new UUID or pick up an existing one if tab is not closed
-    initializeSession();
+    initializeSession(); // Re-initialize to get a new UUID
   };
 
 
@@ -219,7 +260,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 export const useAppContext = (): AppContextType => {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useAppContext must be used within an AppProvider');
+    throw new Error('useAppContext debe ser utilizado dentro de un AppProvider');
   }
   return context;
 };

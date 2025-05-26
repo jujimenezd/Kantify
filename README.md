@@ -1,7 +1,7 @@
-# Proyecto Kantify (Ethical Compass)
+# Proyecto Kantify
 
 ## Resumen del Proyecto
-Ethical Compass (originalmente Proyecto Kantify) es una aplicación web interactiva que aplica el experimento de universalización de Kant para ayudar a los usuarios a reflexionar sobre las consecuencias éticas globales de sus decisiones cotidianas.
+Kantify es una aplicación web interactiva que aplica el experimento de universalización de Kant para ayudar a los usuarios a reflexionar sobre las consecuencias éticas globales de sus decisiones cotidianas.
 
 ## Objetivos Clave
 1.  **Sesión 100% anónima**: Garantizar la privacidad del usuario sin recolección de datos personales.
@@ -18,19 +18,19 @@ Ethical Compass (originalmente Proyecto Kantify) es una aplicación web interact
 *   **Persistencia de Sesión (Cliente)**: LocalStorage
 
 ## Estructura del Proyecto (Next.js)
-*   `src/app/`: Rutas principales de la aplicación (landing, dilemas, perfil).
+*   `src/app/`: Rutas principales de la aplicación (inicio, dilemas, perfil).
 *   `src/components/`: Componentes React reutilizables (UI, layout).
 *   `src/contexts/`: Lógica de estado global del cliente (ej: `AppContext.tsx`).
 *   `src/lib/`: Utilidades, tipos TypeScript (`types.ts`).
-*   `src/ai/flows/`: Flujos de Genkit predefinidos para la lógica de IA (NO MODIFICAR).
+*   `src/ai/flows/`: Flujos de Genkit predefinidos para la lógica de IA.
 *   `src/data/`: Datos estáticos (ej: `corpus_dilemas.json`).
 *   `public/`: Archivos estáticos (imágenes, etc.).
 
 ## Cómo Empezar
 1.  **Clonar el repositorio**:
     ```bash
-    git clone https://github.com/your-username/ethical-compass.git
-    cd ethical-compass
+    git clone https://github.com/your-username/kantify.git
+    cd kantify
     ```
 2.  **Crear y activar entorno virtual** (opcional pero recomendado para gestión de Node.js/npm si usas nvm):
     ```bash
@@ -62,7 +62,7 @@ Ethical Compass (originalmente Proyecto Kantify) es una aplicación web interact
     # o npm run genkit:watch para recargar automáticamente
     ```
 
-## Épicas del Proyecto (Conceptuales - Mapeadas desde Jira)
+## Épicas del Proyecto (Conceptuales)
 *   **E1: Gestión de Sesión Anónima**: Manejo de sesión de usuario anónima en el cliente.
 *   **E2: Interacción Ética y Respuestas**: Presentación de dilemas y captura de respuestas del usuario.
 *   **E3: Inteligencia Artificial y Feedback Ético**: Integración con Genkit para generación de dilemas dinámicos y narrativas kantianas.
@@ -79,7 +79,7 @@ Ethical Compass (originalmente Proyecto Kantify) es una aplicación web interact
 *   **Definition of Done (Inicial)**:
     1.  Código revisado y fusionado a la rama principal.
     2.  Funcionalidad probada (manual o automáticamente según el caso).
-    3.  Cumple con los criterios de aceptación de la User Story.
+    3.  Cumple con los criterios de aceptación de la Historia de Usuario.
     4.  Documentación actualizada (si aplica).
     5.  No introduce regresiones conocidas.
 
@@ -93,7 +93,8 @@ Si en el futuro se requiere persistencia centralizada (incluso anonimizada para 
     *   Establecimiento de guías de estilo de código y convenciones de Git.
     *   Despliegue inicial básico en una plataforma (ej: Vercel, Firebase Hosting).
 *   **Sprint 1: MVP Mínimo Navegable**
-    *   (US-XXX) Implementar la carga y visualización del primer dilema desde el corpus.
-    *   (US-YYY) Permitir respuesta del usuario mediante slider.
-    *   (US-ZZZ) Integrar la generación de la narrativa kantiana para el primer dilema.
-    *   (US-AAA) Flujo básico de navegación entre Home, Dilemas y Perfil (mock).
+    *   (HU-XXX) Implementar la carga y visualización del primer dilema desde el corpus.
+    *   (HU-YYY) Permitir respuesta del usuario mediante slider.
+    *   (HU-ZZZ) Integrar la generación de la narrativa kantiana para el primer dilema.
+    *   (HU-AAA) Flujo básico de navegación entre Inicio, Dilemas y Perfil (mock).
+

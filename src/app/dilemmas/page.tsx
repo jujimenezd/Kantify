@@ -5,7 +5,7 @@ import { useAppContext } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
-import { Loader2, RotateCcw, Wand2, Lightbulb, ChevronsRight, SkipForward } from 'lucide-react';
+import { Loader2, Wand2, Lightbulb, ChevronsRight, SkipForward } from 'lucide-react';
 import Link from 'next/link';
 import { ethicalTopics, dilemmaIntensities, DilemmaIntensity, EthicalTopic } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -24,19 +24,15 @@ export default function DilemmasPage() {
     answeredDilemmas
   } = useAppContext();
   
-  const [sliderValue, setSliderValue] = useState<number>(0.5); // Default to middle of 0-1 scale
+  const [sliderValue, setSliderValue] = useState<number>(0.5); 
   const [showReflection, setShowReflection] = useState<boolean>(false);
   const [selectedTopic, setSelectedTopic] = useState<EthicalTopic>(ethicalTopics[0]);
   const [selectedIntensity, setSelectedIntensity] = useState<DilemmaIntensity>(dilemmaIntensities[0]);
 
-  const currentDilemmaExtended = currentDilemma as (typeof currentDilemma & { kantianNarrative?: string });
-
-
   useEffect(() => {
     if (!sessionUUID) {
-      // router.push('/'); // Redirect if no session, or handle in AppContext
+      // Consider redirecting or handling in AppContext if session is crucial before this page
     }
-    // Reset slider and reflection visibility when dilemma changes
     setSliderValue(0.5);
     setShowReflection(false);
   }, [currentDilemma, sessionUUID]);
@@ -63,8 +59,8 @@ export default function DilemmasPage() {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <Loader2 className="h-12 w-12 animate-spin mx-auto text-primary" />
-        <p className="mt-4 text-lg text-muted-foreground">Initializing your anonymous session...</p>
-        <p className="mt-2 text-sm">If this takes too long, please refresh the page.</p>
+        <p className="mt-4 text-lg text-muted-foreground">Inicializando tu sesión anónima...</p>
+        <p className="mt-2 text-sm">Si esto toma demasiado tiempo, por favor refresca la página.</p>
       </div>
     );
   }
@@ -72,8 +68,17 @@ export default function DilemmasPage() {
   if (!currentDilemma) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
-        <p className="text-lg text-muted-foreground">No dilemmas available at the moment.</p>
-        <Button onClick={handleNextCorpusDilemma} className="mt-4">Try loading a dilemma</Button>
+        {isLoadingAi ? (
+          <>
+            <Loader2 className="h-12 w-12 animate-spin mx-auto text-primary" />
+            <p className="mt-4 text-lg text-muted-foreground">Cargando dilema...</p>
+          </>
+        ) : (
+          <>
+            <p className="text-lg text-muted-foreground">No hay dilemas disponibles en este momento.</p>
+            <Button onClick={handleNextCorpusDilemma} className="mt-4">Intentar cargar un dilema</Button>
+          </>
+        )}
       </div>
     );
   }
@@ -83,10 +88,10 @@ export default function DilemmasPage() {
       <Card className="w-full max-w-2xl shadow-xl">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-center">
-            Ethical Dilemma
+            Dilema Ético
           </CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            Topic: {currentDilemma.topico_principal} | Intensity: {currentDilemma.intensidad}
+            Tópico: {currentDilemma.topico_principal} | Intensidad: {currentDilemma.intensidad}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -104,26 +109,26 @@ export default function DilemmasPage() {
                   max={1}
                   step={0.01}
                   disabled={isLoadingAi}
-                  aria-label="Dilemma response slider"
+                  aria-label="Control deslizante de respuesta al dilema"
                 />
               </div>
               <div className="flex justify-between text-sm text-muted-foreground px-1">
-                <span>Lean Left (e.g. Disagree / No)</span>
-                <span>Lean Right (e.g. Agree / Yes)</span>
+                <span>Inclínate a la Izquierda (ej. No)</span>
+                <span>Inclínate a la Derecha (ej. Sí)</span>
               </div>
             </>
           )}
 
-          {showReflection && currentDilemmaExtended?.kantianNarrative && (
+          {showReflection && currentDilemma?.kantianNarrative && (
             <Card className="bg-accent/20 border-accent">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-primary">
                   <Lightbulb size={20} />
-                  Kantian Reflection
+                  Reflexión Kantiana
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm leading-normal">{currentDilemmaExtended.kantianNarrative}</p>
+                <p className="text-sm leading-normal">{currentDilemma.kantianNarrative}</p>
               </CardContent>
             </Card>
           )}
@@ -132,15 +137,16 @@ export default function DilemmasPage() {
           {!showReflection ? (
             <Button onClick={handleAnswer} disabled={isLoadingAi} className="w-full sm:w-auto shadow-md">
               {isLoadingAi && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Submit & Reflect
+              Enviar y Reflexionar
             </Button>
           ) : (
             <div className="flex flex-col sm:flex-row gap-2 w-full">
               <Button onClick={handleNextCorpusDilemma} variant="outline" className="flex-1 shadow-sm">
-                <SkipForward className="mr-2 h-4 w-4" /> Next Corpus Dilemma
+                <SkipForward className="mr-2 h-4 w-4" /> Siguiente Dilema (Corpus)
               </Button>
-              <Button onClick={handleGenerateNewDilemma} variant="outline" className="flex-1 shadow-sm">
-                 <Wand2 className="mr-2 h-4 w-4" /> Custom Dilemma
+              <Button onClick={handleGenerateNewDilemma} variant="outline" className="flex-1 shadow-sm" disabled={isLoadingAi}>
+                 {isLoadingAi && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                 <Wand2 className="mr-2 h-4 w-4" /> Generar Dilema
               </Button>
             </div>
           )}
@@ -149,19 +155,19 @@ export default function DilemmasPage() {
 
       {showReflection && (
         <div className="w-full max-w-2xl mt-4 p-4 bg-card border rounded-lg shadow">
-          <p className="text-sm text-muted-foreground mb-2">Generate a new dilemma based on:</p>
+          <p className="text-sm text-muted-foreground mb-2">Generar un nuevo dilema basado en:</p>
           <div className="flex gap-2 mb-2">
-            <Select value={selectedTopic} onValueChange={(value) => setSelectedTopic(value as EthicalTopic)}>
+            <Select value={selectedTopic} onValueChange={(value) => setSelectedTopic(value as EthicalTopic)} disabled={isLoadingAi}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Select Topic" />
+                <SelectValue placeholder="Seleccionar Tópico" />
               </SelectTrigger>
               <SelectContent>
                 {ethicalTopics.map(topic => <SelectItem key={topic} value={topic}>{topic}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Select value={selectedIntensity} onValueChange={(value) => setSelectedIntensity(value as DilemmaIntensity)}>
+            <Select value={selectedIntensity} onValueChange={(value) => setSelectedIntensity(value as DilemmaIntensity)} disabled={isLoadingAi}>
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Select Intensity" />
+                <SelectValue placeholder="Seleccionar Intensidad" />
               </SelectTrigger>
               <SelectContent>
                 {dilemmaIntensities.map(intensity => <SelectItem key={intensity} value={intensity}>{intensity}</SelectItem>)}
@@ -174,14 +180,14 @@ export default function DilemmasPage() {
       <div className="w-full max-w-2xl mt-8">
         <Progress value={progressPercentage} className="w-full h-2" />
         <p className="text-sm text-muted-foreground text-center mt-2">
-          {answeredDilemmas.length} dilemma(s) reflected upon.
+          {answeredDilemmas.length} dilema(s) reflexionados.
         </p>
       </div>
 
       {answeredDilemmas.length > 0 && (
          <Link href="/profile" className="mt-8">
             <Button variant="default" size="lg" className="shadow-lg hover:shadow-xl transition-shadow">
-              View My Ethical Profile <ChevronsRight className="ml-2 h-5 w-5" />
+              Ver Mi Perfil Ético <ChevronsRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
       )}

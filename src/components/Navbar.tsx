@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import EthicalCompassLogo from './EthicalCompassLogo';
+import KantifyLogo from './KantifyLogo'; // Updated import
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -9,9 +9,9 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '/dilemmas', label: 'Dilemmas' },
-    { href: '/profile', label: 'My Profile' },
+    { href: '/', label: 'Inicio' },
+    { href: '/dilemmas', label: 'Dilemas' },
+    { href: '/profile', label: 'Mi Perfil' },
   ];
 
   return (
@@ -19,9 +19,9 @@ export default function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 group">
-            <EthicalCompassLogo />
+            <KantifyLogo /> {/* Updated component */}
             <h1 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-              Ethical Compass
+              Kantify
             </h1>
           </Link>
           <div className="flex items-center space-x-2 sm:space-x-4">

@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
-import { Geist } from 'next/font/google'; // Corrected import for Geist (removed _Mono)
+import { Geist } from 'next/font/google'; 
 import './globals.css';
 import { AppProvider } from '@/contexts/AppContext';
 import { Toaster } from '@/components/ui/toaster';
 import Navbar from '@/components/Navbar';
 
-const geistSans = Geist({ // Using Geist variable font
+const geistSans = Geist({ 
   variable: '--font-geist-sans',
   subsets: ['latin'],
 });
 
 
 export const metadata: Metadata = {
-  title: 'Ethical Compass',
-  description: 'Explore ethical dilemmas with Kantian reflection.',
+  title: 'Kantify',
+  description: 'Explora dilemas éticos con reflexión kantiana.',
 };
 
 export default function RootLayout({
@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={geistSans.variable}>
+    <html lang="es" className={geistSans.variable}>
       <body className="antialiased font-sans">
         <AppProvider>
           <Navbar />
