@@ -13,7 +13,16 @@ export interface GeneratedDilemma {
   intensidad: "Suave" | "Medio" | "Extremo"; // The intensity used to generate it
 }
 
-export type AnyDilemma = Dilemma | GeneratedDilemma;
+export interface RAGDilemma {
+  id_dilema: string; // e.g., "rag-[timestamp]"
+  texto_dilema: string;
+  topico_principal: string;
+  intensidad: "Suave" | "Medio" | "Extremo";
+  philosophical_foundation: string; // Foundation from philosophical documents
+  source: "rag"; // To identify the source
+}
+
+export type AnyDilemma = Dilemma | GeneratedDilemma | RAGDilemma;
 
 export interface AnsweredDilemma {
   dilemma: AnyDilemma;
@@ -26,11 +35,11 @@ export interface EthicalProfile {
   summary: string; // A textual summary
   // For visual_data, consider how you'll structure data for charts if you use them.
   // Example: responses per topic, intensity distribution, etc.
-  visual_data: Record<string, any>; 
+  visual_data: Record<string, any>;
   answeredDilemmas: AnsweredDilemma[];
 }
 
-export type EthicalTopic = 
+export type EthicalTopic =
   | "Temporalidad Moral"
   | "Alteridad Radical"
   | "Imperativo de Universalización"
@@ -48,7 +57,11 @@ export const ethicalTopics: EthicalTopic[] = [
 ];
 
 export type DilemmaIntensity = "Suave" | "Medio" | "Extremo";
-export const dilemmaIntensities: DilemmaIntensity[] = ["Suave", "Medio", "Extremo"];
+export const dilemmaIntensities: DilemmaIntensity[] = [
+  "Suave",
+  "Medio",
+  "Extremo",
+];
 
 export interface TopicIconMapping {
   [key: string]: React.ElementType;

@@ -46,9 +46,9 @@ def query_rag(query_text: str):
     # Preparamos el prompt para el modelo de OpenAI
     context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
     prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-    # print(f"Prompt template: {prompt_template}")
+    print(f"Prompt template: {prompt_template}")
     prompt = prompt_template.format(context=context_text, question=query_text)
-    # print(f"Prompt preparado {prompt}")
+    print(f"Prompt preparado {prompt}")
 
     # Obtenemos la respuesta del modelo de OpenAI
     model = ChatOpenAI()
