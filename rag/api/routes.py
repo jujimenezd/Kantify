@@ -106,10 +106,10 @@ async def generate_dilemma(request: DilemmaRequest):
 
         # Validar que el resultado tenga los campos necesarios
         required_fields = [
-            "dilema_texto",
-            "fundamentacion_filosofica",
-            "fuentes_utilizadas",
-            "variable_oculta",
+            "dilemma_text",
+            "philosophical_foundation",
+            "used_sources",
+            "hidden_variable",
         ]
         for field in required_fields:
             if field not in result:
@@ -118,10 +118,10 @@ async def generate_dilemma(request: DilemmaRequest):
 
         return DilemmaResponse(
             success=True,
-            dilema_texto=result["dilema_texto"],
-            fundamentacion_filosofica=result["fundamentacion_filosofica"],
-            fuentes_utilizadas=result.get("fuentes_utilizadas", []),
-            variable_oculta=result["variable_oculta"],
+            dilemma_text=result["dilemma_text"],
+            philosophical_foundation=result["philosophical_foundation"],
+            used_sources=result.get("used_sources", []),
+            hidden_variable=result["hidden_variable"],
             topic=result.get("topic", request.topic),
             intensity=result.get("intensity", request.intensity),
             sources_metadata=result.get("sources_metadata", []),

@@ -77,11 +77,11 @@ def test_dilemma_generation():
             )
 
             print("✅ ÉXITO - Dilema generado:")
-            print(f"   💭 Texto: {result.get('dilema_texto', 'N/A')}")
+            print(f"   💭 Texto: {result.get('dilemma_text', 'N/A')}")
             print(
-                f"   🧠 Fundamentación: {result.get('fundamentacion_filosofica', 'N/A')[:]}..."
+                f"   🧠 Fundamentación: {result.get('philosophical_foundation', 'N/A')[:]}..."
             )
-            print(f"   📚 Fuentes: {result.get('fuentes_utilizadas', 'N/A')}")
+            print(f"   📚 Fuentes: {result.get('used_sources', 'N/A')}")
 
             results.append({"test": i, "success": True, "result": result})
 

@@ -18,10 +18,10 @@ Este sistema utiliza **Retrieval-Augmented Generation (RAG)** para generar dilem
 
 ## 🚀 Configuración
 
-### 1. Instalar dependencias
+### 1. Instalar dependencias (pyproject.toml)
 
 ```bash
-pip install -r config/requirements_rag.txt
+pip install e .
 ```
 
 ### 2. Configurar variables de entorno

@@ -48,10 +48,10 @@ terminal sobre la seguridad de todos"
 
 FORMATO DE RESPUESTA (JSON):
 {{
-    "dilema_texto": "El texto del dilema aquí...",
-    "fundamentacion_filosofica": "Breve explicación de 2-3 líneas sobre qué concepto filosófico del contexto conecta con este dilema",
-    "fuentes_utilizadas": ["Concepto o autor principal del contexto"],
-    "variable_oculta": "El aspecto ético profundo que explora este dilema"
+    "dilemma_text": "El texto del dilema aquí...",
+    "philosophical_foundation": "Breve explicación de 2-3 líneas sobre qué concepto filosófico del contexto conecta con este dilema",
+    "used_sources": ["Concepto o autor principal del contexto"],
+    "hidden_variable": "El aspecto ético profundo que explora este dilema"
 }}
 
 Genera el dilema ahora:
@@ -143,9 +143,9 @@ def generate_dilemma_with_rag(
 
         # Fallback: crear estructura básica
         return {
-            "dilema_texto": response_text.strip(),
-            "fundamentacion_filosofica": "Generado con base en conocimiento filosófico general",
-            "fuentes_utilizadas": [
+            "dilemma_text": response_text.strip(),
+            "philosophical_foundation": "Generado con base en conocimiento filosófico general",
+            "used_sources": [
                 doc.metadata.get("source", "Desconocida") for doc, _ in results
             ],
             "variable_oculta": f"Aspectos éticos de {topic}",
@@ -181,10 +181,10 @@ def main():
     print("\n" + "=" * 50)
     print("📋 DILEMA GENERADO:")
     print("=" * 50)
-    print(f"Texto: {result['dilema_texto']}")
-    print(f"\n🧠 Fundamentación: {result['fundamentacion_filosofica']}")
-    print(f"\n📚 Fuentes: {', '.join(result['fuentes_utilizadas'])}")
-    print(f"\n🔍 Variable oculta: {result['variable_oculta']}")
+    print(f"Texto: {result['dilema_text']}")
+    print(f"\n🧠 Fundamentación: {result['philosophical_foundation']}")
+    print(f"\n📚 Fuentes: {', '.join(result['used_sources'])}")
+    print(f"\n🔍 Variable oculta: {result['hidden_variable']}")
     print(f"\n📖 Metadatos de fuentes: {result['sources_metadata']}")
 
 

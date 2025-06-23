@@ -10,10 +10,10 @@ export interface RAGDilemmaRequest {
 
 export interface RAGDilemmaResponse {
   success: boolean;
-  dilema_texto: string;
-  fundamentacion_filosofica: string;
-  fuentes_utilizadas: string[];
-  variable_oculta: string;
+  dilemma_text: string;
+  philosophical_foundation: string;
+  used_sources: string[];
+  hidden_variable: string;
   topic: string;
   intensity: string;
   sources_metadata: string[];

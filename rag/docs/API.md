@@ -192,10 +192,3 @@ El servidor genera logs detallados:
 
 **Problema**: OpenAI API Key no configurada
 **Solución**: Verificar archivo `.env`
-
-## 🚀 Próximos pasos
-
-1. ✅ **Fase 1** - Sistema RAG completo
-2. ✅ **Fase 2** - FastAPI Server funcional
-3. 🔄 **Fase 3** - Integración con Next.js
-4. ⏳ **Fase 4** - Deploy y optimización

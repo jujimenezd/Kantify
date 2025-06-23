@@ -87,11 +87,11 @@ def test_generate_dilemma():
             if response.status_code == 200:
                 data = response.json()
                 print(f"✅ Dilema generado en {(end_time - start_time):.2f}s")
-                print(f"   💭 Texto: {data['dilema_texto'][:100]}...")
+                print(f"   💭 Texto: {data['dilemma_text'][:100]}...")
                 print(
-                    f"   🧠 Fundamentación: {data['fundamentacion_filosofica'][:80]}..."
+                    f"   🧠 Fundamentación: {data['philosophical_foundation'][:80]}..."
                 )
-                print(f"   📚 Fuentes: {data['fuentes_utilizadas']}")
+                print(f"   📚 Fuentes: {data['used_sources']}")
                 results.append(
                     {"test": i, "success": True, "time": end_time - start_time}
                 )

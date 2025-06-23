@@ -7,8 +7,9 @@ Sistema completo para generar dilemas éticos fundamentados filosóficamente usa
 ### 1. Configuración
 
 ```bash
-pip install -r config/requirements_api.txt
-cp config/.env.example .env
+cd rag/config
+pip install e .
+pip install -r requirements_api.txt
 # Editar .env con tu OPENAI_API_KEY
 ```
 
@@ -18,13 +19,13 @@ cp config/.env.example .env
 python core/create_database.py
 ```
 
-### 3. Iniciar Servidor
+### 3. Iniciar Servidor FastAPI
 
 ```bash
 python scripts/start_server.py
 ```
 
-### 4. Probar
+### 4. Probar API desde terminal
 
 ```bash
 python scripts/test_api.py

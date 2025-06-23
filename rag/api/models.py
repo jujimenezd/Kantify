@@ -29,14 +29,12 @@ class DilemmaResponse(BaseModel):
     """Modelo para las respuestas de dilemas generados"""
 
     success: bool = Field(..., description="Si la generación fue exitosa")
-    dilema_texto: str = Field(..., description="Texto del dilema generado")
-    fundamentacion_filosofica: str = Field(
+    dilemma_text: str = Field(..., description="Texto del dilema generado")
+    philosophical_foundation: str = Field(
         ..., description="Fundamentación filosófica del dilema"
     )
-    fuentes_utilizadas: List[str] = Field(
-        ..., description="Fuentes filosóficas utilizadas"
-    )
-    variable_oculta: str = Field(..., description="Variable ética oculta que explora")
+    used_sources: List[str] = Field(..., description="Fuentes filosóficas utilizadas")
+    hidden_variable: str = Field(..., description="Variable ética oculta que explora")
     topic: str = Field(..., description="Tópico confirmado")
     intensity: str = Field(..., description="Intensidad confirmada")
     sources_metadata: List[str] = Field(..., description="Metadatos de las fuentes PDF")

@@ -76,10 +76,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const initialRAGDilemma: RAGDilemma = {
         id_dilema: `rag-initial-${Date.now()}`,
-        texto_dilema: result.dilema_texto,
+        texto_dilema: result.dilemma_text,
         topico_principal: result.topic,
         intensidad: result.intensity as "Suave" | "Medio" | "Extremo",
-        philosophical_foundation: result.fundamentacion_filosofica,
+        philosophical_foundation: result.philosophical_foundation,
         source: "rag",
       };
 
@@ -219,10 +219,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 
         const newRAGDilemma: RAGDilemma = {
           id_dilema: `rag-auto-${Date.now()}`,
-          texto_dilema: result.dilema_texto,
+          texto_dilema: result.dilemma_text,
           topico_principal: result.topic,
           intensidad: result.intensity as "Suave" | "Medio" | "Extremo",
-          philosophical_foundation: result.fundamentacion_filosofica,
+          philosophical_foundation: result.philosophical_foundation,
           source: "rag",
         };
 
@@ -327,10 +327,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const newRAGDilemma: RAGDilemma = {
         id_dilema: `rag-${Date.now()}`,
-        texto_dilema: result.dilema_texto,
+        texto_dilema: result.dilemma_text,
         topico_principal: result.topic,
         intensidad: result.intensity as "Suave" | "Medio" | "Extremo",
-        philosophical_foundation: result.fundamentacion_filosofica,
+        philosophical_foundation: result.philosophical_foundation,
         source: "rag",
       };
       setCurrentDilemma({ ...newRAGDilemma, kantianNarrative: null });
