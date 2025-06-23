@@ -21,7 +21,7 @@ Este sistema utiliza **Retrieval-Augmented Generation (RAG)** para generar dilem
 ### 1. Instalar dependencias
 
 ```bash
-pip install langchain langchain-openai chromadb python-dotenv openai
+pip install -r config/requirements_rag.txt
 ```
 
 ### 2. Configurar variables de entorno
@@ -35,7 +35,7 @@ OPENAI_API_KEY=tu_clave_aqui
 ### 3. Crear base de datos
 
 ```bash
-python create_database.py
+python core/create_database.py
 ```
 
 ## 🧪 Uso
@@ -44,16 +44,16 @@ python create_database.py
 
 ```bash
 # Ejemplo básico
-python generate_dilemma_rag.py "Temporalidad Moral" "Suave"
+python core/generate_dilemma_rag.py "Temporalidad Moral" "Suave"
 
 # Con contexto de usuario
-python generate_dilemma_rag.py "Alteridad Radical" "Medio" --context "Usuario empático"
+python core/generate_dilemma_rag.py "Alteridad Radical" "Medio" --context "Usuario empático"
 ```
 
 ### Modo Programático
 
 ```python
-from generate_dilemma_rag import generate_dilemma_with_rag
+from core.generate_dilemma_rag import generate_dilemma_with_rag
 
 resultado = generate_dilemma_with_rag(
     topic="Imperativo de Universalización",
@@ -69,7 +69,7 @@ print(resultado['dilema_texto'])
 ### Prueba rápida
 
 ```bash
-python test_dilemma_generator.py
+python scripts/test_rag.py
 ```
 
 Este script ejecutará 3 pruebas automatizadas y te mostrará si todo funciona correctamente.
@@ -77,7 +77,7 @@ Este script ejecutará 3 pruebas automatizadas y te mostrará si todo funciona c
 ### Prueba manual individual
 
 ```bash
-python generate_dilemma_rag.py "Temporalidad Moral" "Suave"
+python scripts/test_rag.py "Temporalidad Moral" "Suave"
 ```
 
 ## 📊 Formato de Salida
@@ -99,16 +99,19 @@ python generate_dilemma_rag.py "Temporalidad Moral" "Suave"
 - **Temporalidad Moral**: Responsabilidad por consecuencias futuras
 - **Alteridad Radical**: Reconocimiento ético del "Otro"
 - **Imperativo de Universalización**: Coherencia de máximas morales
+- **Ontología de la Ignorancia**: Conocimiento limitado y ética
+- **Economía Moral del Deseo**: Deseo y ética
+- **Microética Cotidiana**: Ética cotidiana
 
 ## 🔧 Personalización
 
 ### Modificar el prompt
 
-Edita `DILEMMA_GENERATION_TEMPLATE` en `generate_dilemma_rag.py`
+Edita `DILEMMA_GENERATION_TEMPLATE` en `core/generate_dilemma_rag.py`
 
 ### Ajustar búsqueda RAG
 
-Modifica parámetros en `generate_dilemma_with_rag()`:
+Modifica parámetros en `core/generate_dilemma_rag.py`:
 
 - `k=4`: Número de documentos a recuperar
 - `temperature=0.8`: Creatividad del modelo
@@ -117,7 +120,7 @@ Modifica parámetros en `generate_dilemma_with_rag()`:
 
 ### Error: "No se encontró la carpeta 'chroma'"
 
-**Solución**: Ejecuta `python create_database.py` primero
+**Solución**: Ejecuta `python core/create_database.py` primero
 
 ### Error: "OPENAI_API_KEY no encontrada"
 
@@ -126,9 +129,3 @@ Modifica parámetros en `generate_dilemma_with_rag()`:
 ### Error: "Dependencias faltantes"
 
 **Solución**: `pip install -r requirements.txt` o instala manualmente
-
-## 🔄 Próximos pasos
-
-1. ✅ **Fase 1 COMPLETADA** - Sistema RAG funcional
-2. 🔄 **Fase 2** - API Bridge con Next.js
-3. ⏳ **Fase 3** - Integración con frontend

@@ -6,7 +6,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
 from langchain.vectorstores.chroma import Chroma
 
-from get_embedding_function import get_embedding_function
+from .get_embedding_function import get_embedding_function
 
 
 # ruta de la carpeta data

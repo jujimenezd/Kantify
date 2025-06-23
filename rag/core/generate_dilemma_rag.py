@@ -1,12 +1,12 @@
 import argparse
 import json
-from langchain.vectorstores.chroma import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
-from get_embedding_function import get_embedding_function
+from .get_embedding_function import get_embedding_function
 
 # Cargar las variables de entorno
 load_dotenv()
@@ -31,9 +31,20 @@ REQUISITOS:
 6. **Aplicabilidad**: Situación en la que una persona real podría encontrarse
 
 EJEMPLOS DE ESTILO:
-- Suave: "Si una acción tuya hoy tiene un impacto negativo menor pero acumulativo que solo será visible en 50 años, ¿te sientes realmente responsable por ello?"
-- Medio: "Si supieras que tu estilo de vida contribuye a problemas que harán la vida difícil para tus nietos, ¿harías cambios drásticos aunque limiten tu comodidad presente?"
-- Extremo: "Si pudieras salvar 100 vidas sacrificando una vida inocente de tu familia, ¿lo harías?"
+- Suave: "¿Apoyaría políticas públicas que invierten en infraestructura o 
+investigación para prevenir problemas futuros (ej: cambio climático, pandemias), 
+sabiendo que esto podría significar impuestos ligeramente más altos o menos recursos 
+para proyectos de beneficio inmediato hoy?"
+- Medio: "Imagina que tienes la oportunidad de invertir en un proyecto 
+altamente rentable a corto plazo, pero con un riesgo conocido, aunque no garantizado, 
+de causar un desastre ecológico localizado en 30 años. ¿Priorizarías la ganancia actual 
+o la prevención del daño futuro?"
+- Extremo: "Si tuvieras una enfermedad contagiosa y mortal para la cual no 
+existe cura, y el aislamiento total es la única forma de evitar una pandemia global, pero 
+este aislamiento te condena a una muerte solitaria y terrible, ¿respetarías la cuarentena 
+estrictamente, o intentarías buscar alguna forma de compañía o consuelo aunque 
+pusieras en riesgo a toda la humanidad?" (La máxima "priorizar mi bienestar emocional 
+terminal sobre la seguridad de todos"
 
 FORMATO DE RESPUESTA (JSON):
 {{
@@ -54,7 +65,7 @@ def generate_dilemma_with_rag(
     Genera un dilema ético usando RAG para fundamentación filosófica
 
     Args:
-        topic: El tópico ético (ej: "Temporalidad Moral", "Alteridad Radical")
+        topic: El tópico ético (ej: "Temporalidad Moral", "Alteridad Radical", "Imperativo de Universalización", "Ontología de la Ignorancia", "Economía Moral del Deseo", "Microética Cotidiana")
         intensity: La intensidad ("Suave", "Medio", "Extremo")
         user_context: Contexto opcional sobre respuestas previas del usuario
 
@@ -68,7 +79,7 @@ def generate_dilemma_with_rag(
         embedding_function=embedding_function,
         persist_directory=CHROMA_PATH,
     )
-    print(f"📚 Base de datos cargada correctamente")
+    print("📚 Base de datos cargada correctamente")
 
     # Construir query para buscar contexto filosófico relevante
     search_query = f"{topic} ética filosofía moral responsabilidad {intensity.lower()}"
@@ -76,7 +87,7 @@ def generate_dilemma_with_rag(
         search_query += f" {user_context}"
 
     # Buscar documentos relevantes
-    results = db.similarity_search_with_score(search_query, k=4)
+    results = db.similarity_search_with_score(search_query, k=6)
     print(f"🔍 Encontrados {len(results)} documentos relevantes")
 
     # Preparar contexto filosófico
@@ -90,14 +101,16 @@ def generate_dilemma_with_rag(
     # Generar el prompt
     prompt_template = ChatPromptTemplate.from_template(DILEMMA_GENERATION_TEMPLATE)
     prompt = prompt_template.format(
-        context=context_text, topic=topic, intensity=intensity
+        context=context_text,
+        topic=topic,
+        intensity=intensity,
     )
 
     # Generar respuesta con OpenAI
     model = ChatOpenAI(model="gpt-4o-mini", temperature=0.8)
     response_text = model.predict(prompt)
 
-    print(f"🤖 Respuesta generada:")
+    print("🤖 Respuesta generada:")
     print(response_text)
 
     # Parsear respuesta JSON
@@ -132,7 +145,9 @@ def generate_dilemma_with_rag(
         return {
             "dilema_texto": response_text.strip(),
             "fundamentacion_filosofica": "Generado con base en conocimiento filosófico general",
-            "fuentes_utilizadas": ["Contexto filosófico general"],
+            "fuentes_utilizadas": [
+                doc.metadata.get("source", "Desconocida") for doc, _ in results
+            ],
             "variable_oculta": f"Aspectos éticos de {topic}",
             "topic": topic,
             "intensity": intensity,

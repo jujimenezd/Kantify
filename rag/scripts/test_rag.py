@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """
 Script de prueba para el generador de dilemas con RAG
-Ejecutar con: python test_dilemma_generator.py
+Ejecutar con: python scripts/test_rag.py
 """
 
-from generate_dilemma_rag import generate_dilemma_with_rag
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parent.parent))
+from core.generate_dilemma_rag import generate_dilemma_with_rag
 import os
 
 
@@ -18,7 +22,7 @@ def test_dilemma_generation():
     if not os.path.exists("chroma"):
         print("❌ ERROR: No se encontró la carpeta 'chroma'")
         print(
-            "💡 SOLUCIÓN: Ejecuta primero 'python create_database.py' para crear la base de datos"
+            "💡 SOLUCIÓN: Ejecuta primero 'python core/create_database.py' para crear la base de datos"
         )
         return False
 
@@ -39,12 +43,27 @@ def test_dilemma_generation():
             "intensity": "Extremo",
             "context": "Usuario experimentado con 5 dilemas respondidos",
         },
+        {
+            "topic": "Ontología de la Ignorancia",
+            "intensity": "Suave",
+            "context": "Usuario nuevo sin respuestas previas",
+        },
+        {
+            "topic": "Economía Moral del Deseo",
+            "intensity": "Medio",
+            "context": "Usuario que ha mostrado tendencia hacia respuestas empáticas",
+        },
+        {
+            "topic": "Microética Cotidiana",
+            "intensity": "Extremo",
+            "context": "Usuario experimentado con 5 dilemas respondidos",
+        },
     ]
 
     results = []
 
     for i, test_case in enumerate(test_cases, 1):
-        print(f"\n🧪 PRUEBA {i}/3")
+        print(f"\n🧪 PRUEBA {i}/{len(test_cases)}")
         print(f"   📋 Tópico: {test_case['topic']}")
         print(f"   ⚡ Intensidad: {test_case['intensity']}")
         print(f"   👤 Contexto: {test_case['context']}")
@@ -57,7 +76,7 @@ def test_dilemma_generation():
                 user_context=test_case["context"],
             )
 
-            print(f"✅ ÉXITO - Dilema generado:")
+            print("✅ ÉXITO - Dilema generado:")
             print(f"   💭 Texto: {result.get('dilema_texto', 'N/A')}")
             print(
                 f"   🧠 Fundamentación: {result.get('fundamentacion_filosofica', 'N/A')[:100]}..."
@@ -94,7 +113,6 @@ if __name__ == "__main__":
     # Verificar dependencias básicas
     try:
         from dotenv import load_dotenv
-        import openai
 
         load_dotenv()
 
