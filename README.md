@@ -1,100 +1,158 @@
-# Proyecto Kantify
+# Kantify
 
-## Resumen del Proyecto
-Kantify es una aplicación web interactiva que aplica el experimento de universalización de Kant para ayudar a los usuarios a reflexionar sobre las consecuencias éticas globales de sus decisiones cotidianas.
+**Aplicación web interactiva para reflexión ética basada en filosofía kantiana**
 
-## Objetivos Clave
-1.  **Sesión 100% anónima**: Garantizar la privacidad del usuario sin recolección de datos personales.
-2.  **Interacción con Dilemas Éticos**: Presentar preguntas con sliders para respuestas matizadas, cubriendo 6 tópicos éticos.
-3.  **Feedback Inmediato y Narrativa**: Proveer una narrativa reflexiva estilo “Y si todos...” basada en IA.
-4.  **Perfil Ético Descargable**: Permitir la exportación de un perfil ético anónimo.
+## 🎯 Descripción del Proyecto
 
-## Stack Tecnológico
-*   **Framework**: Next.js (con App Router)
-*   **Lenguaje**: TypeScript
-*   **UI**: React, Tailwind CSS, ShadCN UI Components
-*   **Inteligencia Artificial**: Google Genkit (con Gemini) para generación de dilemas y narrativas.
-*   **Gestión de Estado (Cliente)**: React Context API
-*   **Persistencia de Sesión (Cliente)**: LocalStorage
+Kantify es una aplicación web que aplica el experimento de universalización de Kant para ayudar a los usuarios a reflexionar sobre las consecuencias éticas globales de sus decisiones cotidianas. La plataforma presenta dilemas éticos interactivos y genera retroalimentación personalizada usando el principio "¿Qué pasaría si todos hicieran esto?" .
 
-## Estructura del Proyecto (Next.js)
-*   `src/app/`: Rutas principales de la aplicación (inicio, dilemas, perfil).
-*   `src/components/`: Componentes React reutilizables (UI, layout).
-*   `src/contexts/`: Lógica de estado global del cliente (ej: `AppContext.tsx`).
-*   `src/lib/`: Utilidades, tipos TypeScript (`types.ts`).
-*   `src/ai/flows/`: Flujos de Genkit predefinidos para la lógica de IA.
-*   `src/data/`: Datos estáticos (ej: `corpus_dilemas.json`).
-*   `public/`: Archivos estáticos (imágenes, etc.).
+## ✨ Características Principales
 
-## Cómo Empezar
-1.  **Clonar el repositorio**:
-    ```bash
-    git clone https://github.com/your-username/kantify.git
-    cd kantify
-    ```
-2.  **Crear y activar entorno virtual** (opcional pero recomendado para gestión de Node.js/npm si usas nvm):
-    ```bash
-    # Ejemplo con nvm
-    # nvm use
-    ```
-3.  **Instalar dependencias**:
-    ```bash
-    npm install
-    # o yarn install
-    ```
-4.  **Configurar variables de entorno**:
-    Crea un archivo `.env.local` en la raíz del proyecto. Necesitarás configurar las credenciales para Google AI (Gemini) si los flujos de Genkit lo requieren para ejecutarse localmente.
-    ```env
-    GOOGLE_API_KEY=TU_API_KEY_DE_GOOGLE_AI
-    # Otras variables si son necesarias para Genkit
-    ```
-5.  **Correr la aplicación en modo desarrollo**:
-    ```bash
-    npm run dev
-    # o yarn dev
-    ```
-    La aplicación estará disponible en `http://localhost:9002` (o el puerto que hayas configurado).
+### 🔒 Privacidad Total
+- **Sesiones 100% anónimas**: Sin recolección de datos personales 
+- **Persistencia local**: Datos almacenados únicamente en localStorage del navegador  
 
-6.  **(Opcional) Correr Genkit en modo desarrollo** (si necesitas interactuar directamente con los flujos o ver logs de Genkit):
-    Abre otra terminal y ejecuta:
-    ```bash
-    npm run genkit:dev
-    # o npm run genkit:watch para recargar automáticamente
-    ```
+### 🎭 Dilemas Éticos Interactivos
+- **6 tópicos filosóficos**: Temporalidad Moral, Alteridad Radical, Imperativo de Universalización, Ontología de la Ignorancia, Economía Moral del Deseo, Microética Cotidiana 
+- **3 niveles de intensidad**: Suave, Medio, Extremo
+- **Respuestas matizadas**: Sistema de sliders para capturar posiciones éticas complejas
 
-## Épicas del Proyecto (Conceptuales)
-*   **E1: Gestión de Sesión Anónima**: Manejo de sesión de usuario anónima en el cliente.
-*   **E2: Interacción Ética y Respuestas**: Presentación de dilemas y captura de respuestas del usuario.
-*   **E3: Inteligencia Artificial y Feedback Ético**: Integración con Genkit para generación de dilemas dinámicos y narrativas kantianas.
-*   **E4: Backend con API (FastAPI)**: Reemplazado por Server Actions y API Routes de Next.js.
-*   **E5: Frontend Interactivo (Streamlit + Plotly)**: Implementado con React, Next.js y componentes ShadCN. Posibles visualizaciones con Recharts (integrado en ShadCN charts) o Plotly.js.
+### 🤖 IA Filosóficamente Fundamentada
+- **Generación RAG**: Dilemas basados en textos de Kant, Levinas, Bauman, Butler y Jonas 
+- **Narrativas kantianas**: Retroalimentación inmediata usando Google Genkit y Gemini 
+- **Fundamentación filosófica**: Cada dilema incluye base teórica y fuentes utilizadas
 
-## Metodología Scrum
-*   **Duración del Sprint**: 2 semanas.
-*   **Ceremonias Clave**:
-    *   Daily Standup (15 min).
-    *   Sprint Planning (2-4 horas).
-    *   Sprint Review (1-2 horas).
-    *   Sprint Retrospective (1-1.5 horas).
-*   **Definition of Done (Inicial)**:
-    1.  Código revisado y fusionado a la rama principal.
-    2.  Funcionalidad probada (manual o automáticamente según el caso).
-    3.  Cumple con los criterios de aceptación de la Historia de Usuario.
-    4.  Documentación actualizada (si aplica).
-    5.  No introduce regresiones conocidas.
+### 📊 Perfil Ético Personalizado
+- **Análisis de respuestas**: Generación automática de perfil basado en decisiones 
+- **Exportación PDF**: Descarga de perfil ético anónimo 
 
-## Consideraciones sobre la Base de Datos
-Para esta versión Next.js, la persistencia de datos del usuario se maneja principalmente en el lado del cliente (`localStorage`) para mantener el anonimato y la simplicidad. El corpus de dilemas se carga desde un archivo JSON.
-Si en el futuro se requiere persistencia centralizada (incluso anonimizada para análisis agregado con consentimiento), se podrían considerar bases de datos como Firebase Firestore, Supabase (PostgreSQL) o Neon. SQLite no es una opción común para despliegues de Next.js en producción.
+## 🏗️ Arquitectura del Sistema
 
-## Próximos Pasos / Enfoque Sprint 0-1 (Ejemplo)
-*   **Sprint 0: Configuración y Normas**
-    *   Configuración completa del entorno de desarrollo.
-    *   Establecimiento de guías de estilo de código y convenciones de Git.
-    *   Despliegue inicial básico en una plataforma (ej: Vercel, Firebase Hosting).
-*   **Sprint 1: MVP Mínimo Navegable**
-    *   (HU-XXX) Implementar la carga y visualización del primer dilema desde el corpus.
-    *   (HU-YYY) Permitir respuesta del usuario mediante slider.
-    *   (HU-ZZZ) Integrar la generación de la narrativa kantiana para el primer dilema.
-    *   (HU-AAA) Flujo básico de navegación entre Inicio, Dilemas y Perfil (mock).
+### Stack Tecnológico
+- **Frontend**: Next.js 14 con App Router, TypeScript, Tailwind CSS 
+- **IA**: Google Genkit con Gemini para narrativas, OpenAI GPT para generación RAG 
+- **Backend**: FastAPI para sistema RAG 
+- **Base de Datos**: ChromaDB para embeddings vectoriales 
+- **Estado**: React Context API para gestión global 
 
+### Componentes Principales
+- **HomePage** (/): Página de bienvenida y explicación del concepto 
+- **DilemmasPage** (/dilemmas): Interfaz principal de interacción con dilemas
+- **ProfilePage** (/profile): Visualización y exportación del perfil ético
+
+## 🚀 Instalación y Configuración
+
+### Prerrequisitos
+- Node.js 18+
+- Python 3.8+
+- Claves API: Google AI (Gemini) y OpenAI
+
+### Configuración del Frontend
+
+```bash
+# Clonar repositorio
+git clone https://github.com/jujimenezd/kantify.git
+cd kantify
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env.local
+# Editar .env.local con tu GOOGLE_API_KEY
+```
+
+
+### Configuración del Sistema RAG
+
+```bash
+# Navegar al directorio RAG
+cd rag
+
+# Instalar dependencias Python
+pip install -e .
+pip install -r config/requirements_api.txt
+
+# Configurar OpenAI API Key
+echo "OPENAI_API_KEY=tu_clave_aqui" > .env
+
+# Crear base de datos vectorial
+python core/create_database.py
+```
+
+
+
+### Ejecución
+
+```bash
+# Terminal 1: Iniciar servidor RAG
+cd rag
+python scripts/start_server.py
+
+# Terminal 2: Iniciar aplicación Next.js
+npm run dev
+
+# Terminal 3 (opcional): Modo desarrollo Genkit
+npm run genkit:dev
+```
+La aplicación estará disponible en http://localhost:9002
+
+## 🧪 Testing
+
+### Pruebas del Sistema RAG
+
+```bash
+cd rag
+python scripts/test_rag.py        # Pruebas por CLI
+python scripts/test_api.py        # Pruebas por CLI
+```
+
+
+### Endpoints Disponibles
+- **RAG API**: http://localhost:8000
+- **Documentación**: http://localhost:8000/docs
+
+## 📁 Estructura del Proyecto
+```bash
+kantify/
+├── src/
+│   ├── app/                 # Páginas Next.js
+│   ├── components/          # Componentes React
+│   ├── contexts/           # Gestión de estado global
+│   ├── lib/                # Utilidades y tipos
+│   ├── ai/flows/           # Flujos Genkit
+│   └── data/               # Datos estáticos
+├── rag/
+│   ├── core/               # Motor RAG
+│   ├── api/                # Servidor FastAPI
+│   ├── data/               # PDFs filosóficos
+│   └── docs/               # Documentación técnica
+└── public/                 # Assets estáticos
+```
+
+
+## 🎯 Flujo de Usuario
+
+1. **Bienvenida**: Introducción al concepto en la página principal
+2. **Reflexión**: Interacción con dilemas éticos usando sliders
+3. **Narrativa**: Recepción de retroalimentación kantiana personalizada
+4. **Perfil**: Generación y exportación del perfil ético
+
+## 📚 Documentación Técnica
+
+- [Sistema RAG](rag/docs/RAG.md): Documentación completa del backend
+- [API FastAPI](rag/docs/API.md): Endpoints y integración
+
+## 🤝 Contribución
+
+Para contribuir:
+
+1. Fork del repositorio
+2. Crear rama feature (git checkout -b feature/nueva-funcionalidad)
+3. Commit cambios (git commit -am 'Agregar nueva funcionalidad')
+4. Push a la rama (git push origin feature/nueva-funcionalidad)
+5. Crear Pull Request
+
+## 📄 Licencia
+
+MIT licence
